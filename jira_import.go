@@ -24,7 +24,8 @@ func getReportItems() []ReportItem {
   request, err := http.NewRequest("GET", getJiraUrl(), nil)
   if err != nil { panic(err) }
 
-  login, password := getJiraCredits()
+  login := getString("Enter your jira login")
+  password := getString("Enter your jira password")
   request.SetBasicAuth(login, password)
 
   fmt.Println("Loading your reports from jira...")
@@ -68,14 +69,4 @@ func getJiraUrl() string {
     fmt.Println("Start time is greater than finish time")
   }
   return fmt.Sprintf(jiraUrlLayout, host, startDate.Format(jiraTimeLayout), endDate.Format(jiraTimeLayout))
-}
-
-func getJiraCredits() (login, password string) {
-  fmt.Println("Enter your jira login:")
-  fmt.Scanf("%s", &login)
-
-  fmt.Println("Enter your jira password:")
-  fmt.Scanf("%s", &password)
-
-  return login, password
 }

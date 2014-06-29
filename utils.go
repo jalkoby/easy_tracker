@@ -25,10 +25,8 @@ func getContent(node gxtml.Node, cssQuery string) string {
   return result[0].Content()
 }
 
-func getHost(prompt string) string {
-  fmt.Println(prompt)
-  var host string
-  fmt.Scanf("%s", &host)
+func getHost(prompt string) (host string) {
+  host = getString(prompt)
   if !strings.HasSuffix(host, "/") { host = host + "/" }
   if !strings.HasPrefix(host, "http") { host = "http://" + host }
   return host
@@ -45,11 +43,9 @@ func getResponseBody(request *http.Request) []byte {
 }
 
 func getTime(prompt string, defTime time.Time) time.Time {
-  var rawInput string
-
-  fmt.Println(fmt.Sprintf("%v [default is %v]", prompt, defTime.Format(terminalTimeLayout)))
+  prompt = fmt.Sprintf("%v [default is %v]", prompt, defTime.Format(terminalTimeLayout))
   for {
-    fmt.Scanf("%s", &rawInput)
+    rawInput := getString(prompt)
     if len(rawInput) == 0 {
       return defTime
     } else {
@@ -58,6 +54,12 @@ func getTime(prompt string, defTime time.Time) time.Time {
     }
     fmt.Println("Invalid input. Please try again")
   }
+}
+
+func getString(prompt string) (result string) {
+  fmt.Printf("%v:\n", prompt)
+  fmt.Scanf("%s", &result)
+  return result
 }
 
 func logger(key interface{}, message interface{}) {
