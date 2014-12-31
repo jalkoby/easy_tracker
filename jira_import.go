@@ -24,8 +24,8 @@ func getReportItems() []ReportItem {
   request, err := http.NewRequest("GET", getJiraUrl(), nil)
   if err != nil { panic(err) }
 
-  login := getString("Enter your jira login")
-  password := getString("Enter your jira password")
+  login := getVarOrInput("JIRA_USER", "Enter your jira login")
+  password := getVarOrInput("JIRA_PASSWORD", "Enter your jira password")
   request.SetBasicAuth(login, password)
 
   fmt.Println("Loading your reports from jira...")
@@ -56,7 +56,7 @@ func getReportItems() []ReportItem {
 }
 
 func getJiraUrl() string {
-  host := getHost("Hi! For starting trasfer input hostname of your jira")
+  host := getHost("JIRA_HOST", "Hi! For starting trasfer input hostname of your jira")
   var startDate time.Time
   var endDate time.Time
 

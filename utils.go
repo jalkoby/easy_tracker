@@ -6,6 +6,7 @@ import(
   "net/http"
   gcss "github.com/moovweb/gokogiri/css"
   gxtml "github.com/moovweb/gokogiri/xml"
+  "os"
   "regexp"
   "strings"
   "time"
@@ -25,8 +26,8 @@ func getContent(node gxtml.Node, cssQuery string) string {
   return result[0].Content()
 }
 
-func getHost(prompt string) (host string) {
-  host = getString(prompt)
+func getHost(varName string, prompt string) (host string) {
+  host = getVarOrInput(varName, prompt)
   if !strings.HasSuffix(host, "/") { host = host + "/" }
   if !strings.HasPrefix(host, "http") { host = "http://" + host }
   return host
@@ -54,6 +55,14 @@ func getTime(prompt string, defTime time.Time) time.Time {
     }
     fmt.Println("Invalid input. Please try again")
   }
+}
+
+func getVarOrInput(varName string, prompt string) (result string) {
+  result = os.Getenv(varName)
+  if result == "" {
+    result = getString(prompt)
+  }
+  return result
 }
 
 func getString(prompt string) (result string) {

@@ -7,14 +7,14 @@ import(
   "net/http"
 )
 
-const redmineTimeFormat = "2006/01/02"
+const redmineTimeFormat = "2006-01-02"
 
 func uploadReportItems(reportItems []ReportItem) {
-  host := getHost("Enter your redmine host")
-  apiKey := getString("Enter your api token")
+  host := getHost("REDMINE_HOST", "Enter your redmine host")
+  apiKey := getVarOrInput("REDMINE_TOKEN", "Enter your api token")
 
   projectId := getProject(host, apiKey)
-  postUrl := fmt.Sprintf("%vtime_entries", host)
+  postUrl := fmt.Sprintf("%vtime_entries.json", host)
   for _, reportItem := range reportItems {
     body := map[string]map[string]interface{}{
       "time_entry": map[string]interface{} {
@@ -33,6 +33,7 @@ func uploadReportItems(reportItems []ReportItem) {
     request.Header.Set("Content-Type", "application/json")
     request.Header.Set("Accept", "application/json")
 
+    client := &http.Client{}
     _, err = client.Do(request)
     if err != nil { panic(err) }
     fmt.Print(".")
